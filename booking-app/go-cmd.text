@@ -1,0 +1,6 @@
+# to init the app
+go mod init booking-app
+
+# to excute go files
+go run filename(main.go)
+
