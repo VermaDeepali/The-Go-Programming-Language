@@ -88,4 +88,22 @@ func main() {
 			// fmt.Println("Your input data is invalid, try again.")
 		}
 	}
+
+	city := "London"
+	switch city {
+	case "New York":
+		// execute code for booking new york conference tickets
+	case "Singapore":
+		// execute
+	// case "London":
+	// execute
+	case "London", "Berlin": // if same logic needs to be executed
+		// execute
+	case "Mexico City":
+		// execute
+	case "Hong Kong":
+		// execute
+	default:
+		fmt.Print("No valid city selected!")
+	}
 }
