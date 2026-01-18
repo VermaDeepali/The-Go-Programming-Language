@@ -1,3 +1,17 @@
 1. Go programs are organized into packages
 A package is a collection of source files
 Look for documentation to find the packages details
+
+2. Go function can return multiple returns type
+
+3. Package level variables
+Defined at the top outside all functions
+
+To use helper files--> define those file name for eg: go run main.go helper.go or simply can use go run . (when we need t run multiple files)
+
+Exporting a variable/function/constant/types:
+Capitalize the first letter
+
+we can't mix datatypes in MAP
+
+Use of STRUCT datatypes can be used to save mixed data types
