@@ -15,3 +15,13 @@ Capitalize the first letter
 we can't mix datatypes in MAP
 
 Use of STRUCT datatypes can be used to save mixed data types
+
+Concurrency in GO is cheap and easy
+
+WaitGroup: Waits for the launched goroutines to finish
+-> Package "sync" provides basic synchronization functionality
+-> Add: Sets the number of goroutines to wait for (increases the counter by the provided number)
+-> Wait: Blocks until the WaitGroup counter is 0
+-> Done: Decrements the WaitGroup counter by 1, So this is called by the goroutines to indicate that it's finished
+
+Go uses "Green Thread"

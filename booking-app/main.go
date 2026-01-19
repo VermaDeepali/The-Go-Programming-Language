@@ -3,6 +3,8 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
+	"sync"
+	"time"
 )
 
 const conferenceTicket int = 50
@@ -21,46 +23,48 @@ type UserData struct {
 	numberOfTickets uint
 }
 
+var wg = sync.WaitGroup{} // waits for the launched goroutines to finish
+
 func main() {
 
 	// call greetUsers function
 	// it'll directly use the params from the global declarations
 	greetUsers()
 
-	for {
+	// move to getuserInput function
+	firstName, lastName, email, userTickets := getUserInput()
 
-		// move to getuserInput function
-		firstName, lastName, email, userTickets := getUserInput()
+	// moved to separate fun validateUserInput
+	isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
-		// moved to separate fun validateUserInput
-		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
+	if isValidName && isValidEmail && isValidTicketNumber {
 
-		if isValidName && isValidEmail && isValidTicketNumber {
+		// move to separate book funtion
+		bookTicket(userTickets, firstName, lastName, email)
+		wg.Add(1)
+		go sendTicket(userTickets, firstName, lastName, email) // made concurrent and creates a separate thread
 
-			// move to separate book funtion
-			bookTicket(userTickets, firstName, lastName, email)
+		// call function to print first names
+		firstNames := getFirstNames()
+		fmt.Printf("The first names of bookings are: %v\n", firstNames)
 
-			// call function to print first names
-			firstNames := getFirstNames()
-			fmt.Printf("The first names of bookings are: %v\n", firstNames)
-
-			if remainingTickets == 0 {
-				// end the program
-				fmt.Printf("Our conference is booked out. Come back next year.")
-				break
-			}
-		} else {
-			if !isValidName {
-				fmt.Println((" first name or last name you entered is too short"))
-			}
-			if !isValidEmail {
-				fmt.Println("email address you entered doesn't contain @ sign")
-			}
-			if !isValidTicketNumber {
-				fmt.Println("number of tickets you entered is invalid")
-			}
+		if remainingTickets == 0 {
+			// end the program
+			fmt.Printf("Our conference is booked out. Come back next year.")
+			// break
+		}
+	} else {
+		if !isValidName {
+			fmt.Println((" first name or last name you entered is too short"))
+		}
+		if !isValidEmail {
+			fmt.Println("email address you entered doesn't contain @ sign")
+		}
+		if !isValidTicketNumber {
+			fmt.Println("number of tickets you entered is invalid")
 		}
 	}
+	wg.Wait()
 }
 
 func greetUsers() {
@@ -123,4 +127,13 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You'll receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep((50 * time.Second))
+	var ticket = fmt.Sprintf("%v ticket for %v %v", userTickets, firstName, lastName)
+	fmt.Println("##############################")
+	fmt.Printf("Sending ticket:\n %v \nto email address %v\n", ticket, email)
+	fmt.Println("##############################")
+	wg.Done()
 }
